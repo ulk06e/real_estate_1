@@ -1,10 +1,5 @@
 import streamlit as st 
-import time
-import random
-from openai import OpenAI
-import os
-
-client = OpenAI(api_key="sk-hX08uVYLTHFQaQzKBpWI8wREd43m3slJ", base_url="https://api.proxyapi.ru/openai/v1")
+import AI
 
 st.title("Al Majidiya Residence")
 
@@ -24,14 +19,7 @@ if prompt := st.chat_input("Type your request..."):
     st.session_state.messages.append({"role" : "user", "content" : prompt})
     
     with st.chat_message("assistant"):
-        stream = client.chat.completions.create(
-            model=st.session_state["openai_model"],
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        )
+        stream = AI.get_response(model=st.session_state["openai_model"], messages=st.session_state.messages)
         response = st.write_stream(stream)
     st.session_state.messages.append({"role" : "assistant", "content" : response})
 
